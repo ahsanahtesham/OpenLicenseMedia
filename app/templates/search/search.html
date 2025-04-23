@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Search Open License Media</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('search.search') }}">
+                {{ form.hidden_tag() }}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.query.label(class="form-label") }}
+                        {% if form.query.errors %}
+                            {{ form.query(class="form-control is-invalid", placeholder="Search for images or audio...") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.query.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.query(class="form-control", placeholder="Search for images or audio...") }}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-2 mb-3">
+                        {{ form.media_type.label(class="form-label") }}
+                        {{ form.media_type(class="form-select") }}
+                    </div>
+                    
+                    <div class="col-md-2 mb-3">
+                        {{ form.license.label(class="form-label") }}
+                        {{ form.license(class="form-select") }}
+                    </div>
+                    
+                    <div class="col-md-2 mb-3">
+                        {{ form.source.label(class="form-label") }}
+                        {{ form.source(class="form-select") }}
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 col-md-4 mx-auto">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    {% if results %}
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Search Results for "{{ query }}"</h3>
+            </div>
+            <div class="card-body">
+                <p class="lead">Found {{ results.result_count }} results</p>
+                
+                {% if results.results %}
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        {% for item in results.results %}
+                            <div class="col">
+                                <div class="card h-100">
+                                    {% if form.media_type.data == 'images' %}
+                                        <img src="{{ item.thumbnail }}" class="card-img-top" alt="{{ item.title }}">
+                                    {% else %}
+                                        <div class="card-img-top text-center bg-light p-4">
+                                            <span class="display-1">🎵</span>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ item.title }}</h5>
+                                        <p class="card-text small">
+                                            <strong>Creator:</strong> {{ item.creator if item.creator else 'Unknown' }}<br>
+                                            <strong>Source:</strong> {{ item.source }}<br>
+                                            <strong>License:</strong> {{ item.license }}
+                                        </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{{ url_for('search.detail', media_type=form.media_type.data, media_id=item.id) }}" class="btn btn-primary btn-sm">View Details</a>
+                                        <a href="{{ item.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Open Original</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="mt-4 d-flex justify-content-center">
+                        <nav aria-label="Search results pages">
+                            <ul class="pagination">
+                                {% if page > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('search.search', query=query, media_type=form.media_type.data, license=form.license.data, source=form.source.data, page=page-1) }}">Previous</a>
+                                    </li>
+                                {% endif %}
+                                
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page }}</span>
+                                </li>
+                                
+                                {% if results.results|length == 20 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('search.search', query=query, media_type=form.media_type.data, license=form.license.data, source=form.source.data, page=page+1) }}">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No results found for your search. Try different keywords or filters.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 
