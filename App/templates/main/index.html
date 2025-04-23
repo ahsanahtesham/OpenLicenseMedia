@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="jumbotron text-center py-5 mb-4 bg-light rounded">
+    <h1 class="display-4">Welcome to Open License Media Search</h1>
+    <p class="lead">
+        Your gateway to millions of openly licensed media assets from across the web.
+    </p>
+    <hr class="my-4">
+    <p>
+        Discover high-quality images and audio that you can freely use for your creative projects,
+        all properly attributed and with clear licensing information.
+    </p>
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('search.search') }}" role="button">Start Searching</a>
+        {% if not current_user.is_authenticated %}
+        <a class="btn btn-outline-primary btn-lg" href="{{ url_for('auth.register') }}" role="button">Register Now</a>
+        {% endif %}
+    </p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Free to Use</h5>
+                <p class="card-text">
+                    All media is available under various open licenses that allow you to use them for your projects.
+                    Always check the specific license terms for each media asset.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Save Your Searches</h5>
+                <p class="card-text">
+                    Create an account to save your search history and quickly access your favorite queries anytime.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Powered by Openverse</h5>
+                <p class="card-text">
+                    We integrate with the Openverse API to provide you with a comprehensive collection of openly licensed media.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
