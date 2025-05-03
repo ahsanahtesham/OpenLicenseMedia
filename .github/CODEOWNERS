@@ -1,0 +1,19 @@
+# Define code ownership for the repository
+# This file defines who is automatically requested for review when a pull request changes specific files
+
+# Default owners for everything in the repo
+*       @ahsanahtesham
+
+# Docker configuration files
+Dockerfile      @ahsanahtesham
+docker-compose.yml    @ahsanahtesham
+.dockerignore   @ahsanahtesham
+
+# Application core
+/app/           @ahsanahtesham
+
+# Test files
+/tests/         @ahsanahtesham
+
+# GitHub Actions workflows
+/.github/workflows/    @ahsanahtesham 
